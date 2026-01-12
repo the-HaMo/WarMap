@@ -11,11 +11,10 @@ public class MenuSeleccionManager : MonoBehaviour
     public Button botonEspana;
     public Button boton2Jug;
     
-    // Variables para saber si el jugador ha hecho clic
     private bool mapaListo = false;
     private bool jugadoresListos = false;
 
-    // --- 1. FUNCIÓN PARA EL BOTÓN ESPAÑA ---
+    // seleccionar provincia
     public void SeleccionarEspana()
     {
         mapaListo = true;

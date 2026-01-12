@@ -10,17 +10,17 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public TMP_Text textoInformativo;
 
-    [Header("Interfaz Final")]
+    [Header("Menú Fin de Partida")]
     public GameObject menuFinPartida;
 
-    [Header("Configuración de Dados")]
+    [Header("Dados")]
     public Dado dadoAzul; 
     public Dado dadoRojo; 
 
     public enum EstadoJuego { Preparacion, Jugando, GameOver }
     private EstadoJuego estadoActual = EstadoJuego.Preparacion;
 
-    public enum FaseTurno { Refuerzos, Ataque, Defensa }
+    public enum FaseTurno { Refuerzo, Ataque, Defensa }
     private FaseTurno faseTurnoActual;
 
     private Provincia.Dueño turnoDe = Provincia.Dueño.Jugador; 
@@ -61,13 +61,11 @@ public class GameManager : MonoBehaviour
 
         if (estadoActual == EstadoJuego.Jugando && !esperandoDado && !viendoBatalla)
         {
-            if (Input.GetKeyDown(KeyCode.Space)) SiguienteFaseRisk();
+            if (Input.GetKeyDown(KeyCode.Space)) SiguienteFase();
         }
     }
 
-    // ------------------------------------------------------------------
-    // CLIC IZQUIERDO
-    // ------------------------------------------------------------------
+    // Click IZQUIERDO selección de provincia
     public void GestionarClicIzquierdo(Provincia provincia)
     {
         if (estadoActual == EstadoJuego.GameOver) return;
@@ -75,11 +73,11 @@ public class GameManager : MonoBehaviour
 
         if (estadoActual == EstadoJuego.Preparacion)
         {
-            LogicaPreparacion(provincia);
+            prepararProvincia(provincia);
             return;
         }
 
-        if (faseTurnoActual == FaseTurno.Refuerzos)
+        if (faseTurnoActual == FaseTurno.Refuerzo)
         {
             if (provincia.quienManda == turnoDe)
             {
@@ -108,9 +106,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ------------------------------------------------------------------
-    // CLIC DERECHO
-    // ------------------------------------------------------------------
+   // Click DERECHO ataque o movimiento
     public void GestionarClicDerecho(Provincia objetivo)
     {
         if (estadoActual == EstadoJuego.GameOver) return;
@@ -138,8 +134,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ... (Logica Preparacion) ...
-    void LogicaPreparacion(Provincia provincia)
+    // Fase inicial de preparación +2 por turno
+    void prepararProvincia(Provincia provincia)
     {
         if (provincia.quienManda != Provincia.Dueño.Nadie && provincia.quienManda != turnoDe) return;
         provincia.quienManda = turnoDe;
@@ -157,15 +153,14 @@ public class GameManager : MonoBehaviour
         if (turnoPrepActual > limiteTurnosPrep)
         {
             estadoActual = EstadoJuego.Jugando;
-            IniciarTurnoRisk();
+            IniciarTurno();
         }
         else ActualizarUI();
     }
 
-    // ... (Logica Risk) ...
-    void IniciarTurnoRisk()
+    void IniciarTurno()
     {
-        faseTurnoActual = FaseTurno.Refuerzos;
+        faseTurnoActual = FaseTurno.Refuerzo;
         if(provinciaSeleccionada != null) { provinciaSeleccionada.Deseleccionar(); provinciaSeleccionada = null; }
 
         esperandoDado = true; 
@@ -182,9 +177,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ==================================================================
-    //  MODIFICADO: MENSAJE SIMPLE Y DIRECTO
-    // ==================================================================
+    // Recibe el resultado del dado lanzado
     public void RecibirResultadoDado(int resultado)
     {
         // 1. Calculamos solo el número del bonus
@@ -195,7 +188,7 @@ public class GameManager : MonoBehaviour
         
         esperandoDado = false; 
         
-        // 3. Informamos al jugador CON EL FORMATO QUE PEDISTE
+        // 3. Informamos al jugador 
         if (bonus > 0)
         {
             ActualizarUI($"¡{resultado} del Dado!\nBonus: {bonus}\nTropas totales: {tropasDisponibles}\nHaz clic en una provincia para recibirlos.");
@@ -206,7 +199,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    void SiguienteFaseRisk()
+    void SiguienteFase()
     {
         if (faseTurnoActual == FaseTurno.Ataque)
         {
@@ -216,19 +209,16 @@ public class GameManager : MonoBehaviour
         else if (faseTurnoActual == FaseTurno.Defensa)
         {
             turnoDe = (turnoDe == Provincia.Dueño.Jugador) ? Provincia.Dueño.Enemigo : Provincia.Dueño.Jugador;
-            IniciarTurnoRisk();
+            IniciarTurno();
             return;
         }
         ActualizarUI();
     }
 
-    // ==================================================================
-    // SISTEMA DE BATALLA
-    // ==================================================================
-
+    // Ataque entre provincias
     public void ResolverAtaque(Provincia atacante, Provincia defensor)
     {
-        if (atacante.unidades < 2) return;
+        if (atacante.unidades < 2) return; // Necesita al menos 2 para atacar
 
         int fuerzaAtacante = atacante.unidades;
         int fuerzaDefensor = defensor.unidades;
@@ -303,7 +293,7 @@ public class GameManager : MonoBehaviour
 
     void ComprobarVictoriaDerrota()
     {
-        Provincia[] todasLasProvincias = FindObjectsOfType<Provincia>();
+        Provincia[] todasLasProvincias = FindObjectsByType<Provincia>(FindObjectsSortMode.None);
 
         int contadorJugador = 0;
         int contadorEnemigo = 0;
@@ -358,9 +348,7 @@ public class GameManager : MonoBehaviour
         ActualizarUI($"Seleccionada: {LimpiarNombre(p.name)}");
     }
 
-    // ==================================================================
-    //  ACTUALIZAR UI 
-    // ==================================================================
+    // Interfaz de usuario y mensajes
     void ActualizarUI(string mensajeExtra = "")
     {
         if (textoInformativo == null) return;
@@ -370,7 +358,7 @@ public class GameManager : MonoBehaviour
         {
             if (menuFinPartida != null) menuFinPartida.SetActive(true);
 
-            Provincia[] todas = FindObjectsOfType<Provincia>();
+            Provincia[] todas = FindObjectsByType<Provincia>(FindObjectsSortMode.None);
             bool quedaAlguienAzul = false;
             foreach(var p in todas) if(p.quienManda == Provincia.Dueño.Jugador) { quedaAlguienAzul = true; break; }
 
@@ -394,7 +382,7 @@ public class GameManager : MonoBehaviour
         string nombreFase = "";
         switch (faseTurnoActual)
         {
-            case FaseTurno.Refuerzos: nombreFase = "REFUERZO"; break;
+            case FaseTurno.Refuerzo: nombreFase = "REFUERZO"; break;
             case FaseTurno.Ataque:    nombreFase = "ATAQUE"; break;
             case FaseTurno.Defensa:   nombreFase = "DEFENSA"; break;
         }
@@ -415,7 +403,7 @@ public class GameManager : MonoBehaviour
         {
             if (string.IsNullOrEmpty(mensajeExtra))
             {
-                if(faseTurnoActual == FaseTurno.Refuerzos) instrucciones = "Selecciona provincia para reforzar.";
+                if(faseTurnoActual == FaseTurno.Refuerzo) instrucciones = "Selecciona provincia para reforzar.";
                 else if(faseTurnoActual == FaseTurno.Ataque) instrucciones = "Clic Derecho en enemigos para atacar.";
                 else instrucciones = "Mueve tropas entre tus territorios.";
             }
@@ -445,14 +433,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
-    // ==================================================================
-    // CALCULO DE BONUS (SOLO DEVUELVE EL NÚMERO TOTAL)
-    // ==================================================================
+    // Cálculo de bonus regional
     int CalcularBonusRegional(Provincia.Dueño jugador)
     {
         int bonusTotal = 0;
         
-        Provincia[] todas = FindObjectsOfType<Provincia>();
+        Provincia[] todas = FindObjectsByType<Provincia>(FindObjectsSortMode.None);
         var regiones = todas.GroupBy(p => p.transform.parent.name);
 
         foreach (var region in regiones)

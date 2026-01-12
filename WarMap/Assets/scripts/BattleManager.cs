@@ -9,13 +9,13 @@ public class BattleManager : MonoBehaviour
     public Camera mainCamera;   
     public Camera battleCamera; 
 
-    [Header("Prefab Único y Colores")]
+    [Header("Soldado y Materiales")]
     public GameObject soldadoUnicoPrefab; 
     public Material materialAzul; 
     public Material materialRojo;
 
     [Header("Ajustes")]
-    public Vector3 offsetCamara = new Vector3(0, 10, -10); 
+    public Vector3 offsetCamara = new Vector3(0, 0.394f, 0.792f); 
     public float duracionViajeCamara = 1.5f; 
 
     void Awake() { instance = this; }
@@ -27,7 +27,6 @@ public class BattleManager : MonoBehaviour
 
     IEnumerator SecuenciaDeBatalla(Provincia p1, Provincia p2, bool ganaAtacante)
     {
-        // 1. CALCULAR PUNTOS
         Vector3 sitioAtacante = p1.GetComponent<Renderer>().bounds.center; 
         Vector3 sitioDefensor = p2.GetComponent<Renderer>().bounds.center; 
         Vector3 centroCombate = (sitioAtacante + sitioDefensor) / 2;   
@@ -35,16 +34,11 @@ public class BattleManager : MonoBehaviour
         Vector3 posicionFinalCamara = centroCombate + offsetCamara;
         Quaternion rotacionFinalCamara = Quaternion.LookRotation(centroCombate - posicionFinalCamara);
 
-        // 2. PREPARAR CÁMARA (Posición inicial arriba)
         battleCamera.transform.position = mainCamera.transform.position;
         battleCamera.transform.rotation = mainCamera.transform.rotation;
         
         mainCamera.gameObject.SetActive(false); 
         battleCamera.gameObject.SetActive(true); 
-
-        // ====================================================================
-        // 3. CREAR Y ORIENTAR (¡AHORA LO HACEMOS ANTES DE BAJAR!)
-        // ====================================================================
         
         // Creamos soldados
         GameObject soldadoA = Instantiate(soldadoUnicoPrefab, sitioAtacante, Quaternion.identity);
@@ -64,11 +58,7 @@ public class BattleManager : MonoBehaviour
         if (dirHaciaAtacante != Vector3.zero) 
             soldadoB.transform.rotation = Quaternion.LookRotation(-dirHaciaAtacante);
 
-        // ====================================================================
-        // 4. TRANSICIÓN DE BAJADA (ZOOM IN) 🚀
-        // ====================================================================
-        // Ahora, mientras la cámara baja, ya veremos a los soldados ahí abajo
-        
+        // Transición suave de cámara
         float tiempo = 0;
         Vector3 posOrigen = battleCamera.transform.position;
         Quaternion rotOrigen = battleCamera.transform.rotation;
@@ -83,13 +73,11 @@ public class BattleManager : MonoBehaviour
             yield return null;
         }
 
-        // 5. TENSIÓN Y MUERTE
-        // Esperamos un poquito ya con la cámara cerca
+        // Esperamos un poquito ya con la cámara cerca de los soldados
         yield return new WaitForSeconds(0.2f);
 
         GameObject perdedor = ganaAtacante ? soldadoB : soldadoA;
         GameObject ganador = ganaAtacante ? soldadoA : soldadoB;
-
         explotar scriptExplosion = perdedor.GetComponentInChildren<explotar>();
         
         if (scriptExplosion != null)
@@ -98,16 +86,15 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            Destroy(perdedor); 
+            Destroy(perdedor); // Si se destruye no funciona la explosión
         }
 
         yield return new WaitForSeconds(1.5f);
         
-        // Limpieza de objetos
         Destroy(ganador);
         if (perdedor != null) Destroy(perdedor);
 
-        // 6. TRANSICIÓN DE SUBIDA (ZOOM OUT) 🚀
+        // transición de vuelta de cámara
         tiempo = 0;
         Vector3 posAbajo = battleCamera.transform.position;
         Quaternion rotAbajo = battleCamera.transform.rotation;

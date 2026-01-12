@@ -13,9 +13,7 @@ public class Dado : MonoBehaviour
 
     void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
-
-        // TUS COORDENADAS EXACTAS
+        gameManager = FindFirstObjectByType<GameManager>();
         rotacionesCaras = new Vector3[7]; 
         rotacionesCaras[3] = new Vector3(0, 0, 0);     // 3
         rotacionesCaras[1] = new Vector3(90, 0, 0);    // 1
@@ -25,51 +23,50 @@ public class Dado : MonoBehaviour
         rotacionesCaras[2] = new Vector3(0, 0, 270);   // 2
     }
 
-    public void PrepararDado(bool esParaIA)
+    public void PrepararDado(bool lanzamientoAutomatico)
     {
-        puedeSerLanzado = true;
-        estaRodando = false;
-        // Si es la IA (o el jugador 2 en manual), espera un segundo antes de dejar clicar
-        if (esParaIA) StartCoroutine(EsperarParaActivar());
+        gameObject.SetActive(true); 
+        estaRodando = false;        
+        puedeSerLanzado = true;     
+
+        if (lanzamientoAutomatico)
+        {
+            StartCoroutine(Lanzar());
+        }
     }
 
     private void OnMouseDown()
     {
         if (puedeSerLanzado && !estaRodando)
         {
-            StartCoroutine(RutinaLanzar());
+            StartCoroutine(Lanzar());
         }
     }
 
     IEnumerator EsperarParaActivar()
     {
-        // Pequeña pausa al aparecer antes de que se pueda lanzar
         yield return new WaitForSeconds(0.5f); 
     }
 
-    IEnumerator RutinaLanzar()
+    IEnumerator Lanzar()
     {
         puedeSerLanzado = false; 
         estaRodando = true;
 
-        // 1. Calculamos el resultado final
         int resultado = Random.Range(1, 7);
 
-        // 2. ANIMACIÓN DE RODAR (Dando tumbos entre caras)
+        // animacion del dado 
         float tiempoTotal = 1.0f; // Tiempo que pasa rodando
         float tiempoTranscurrido = 0f;
 
         while (tiempoTranscurrido < tiempoTotal)
         {
-            // Elegimos una cara cualquiera para hacer el efecto de "tumbo"
+            // Elegimos una cara cualquiera 
             int caraRandom = Random.Range(1, 7);
             Quaternion rotacionTumbo = Quaternion.Euler(rotacionesCaras[caraRandom]);
-            
-            // Hacemos un movimiento rápido hacia esa cara
             float paso = 0f;
             Quaternion rotInicial = transform.rotation;
-            
-            // Este bucle interno hace la transición rápida entre un tumbo y otro
+            // transiciones entre caras
             while (paso < 0.15f && tiempoTranscurrido < tiempoTotal)
             {
                 transform.rotation = Quaternion.Lerp(rotInicial, rotacionTumbo, paso * 15f); 
@@ -79,19 +76,10 @@ public class Dado : MonoBehaviour
             }
         }
 
-        // ---------------------------------------------------------
-        // 3. ATERRIZAJE FINAL (SECO) - ¡Aquí está el cambio!
-        // ---------------------------------------------------------
-        // Al terminar el tiempo, forzamos la rotación final inmediatamente.
-        // Sin transiciones raras, se queda clavado.
+        // Resultado final
         transform.rotation = Quaternion.Euler(rotacionesCaras[resultado]);
-
-        // Añadimos una pequeñísima pausa (0.3s) para que el jugador vea el número
-        // antes de que el dado desaparezca.
         yield return new WaitForSeconds(0.3f);
-
-        // 4. Avisamos al juego
-        Debug.Log("Ha salido un: " + resultado);
+        // Avisamos al juego
         gameManager.RecibirResultadoDado(resultado);
         
         estaRodando = false;

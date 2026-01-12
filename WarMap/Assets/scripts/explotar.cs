@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class explotar : MonoBehaviour
 {
-    [Header("ARRASTRA AQUÍ TUS PIEZAS")]
+    [Header("piezas")]
     public GameObject[] piezas; 
 
     [Header("Configuración")]
@@ -25,7 +25,7 @@ public class explotar : MonoBehaviour
 
     public void Bum()
     {
-        // 1. Ocultamos al hijo actual (soldado sano)
+        // 1. Ocultamos el soldado completo
         if(GetComponent<MeshRenderer>()) GetComponent<MeshRenderer>().enabled = false;
         
         // 2. Activamos la explosión
@@ -44,16 +44,10 @@ public class explotar : MonoBehaviour
             }
         }
 
-        // 3. LIMPIEZA COMPLETA (Aquí estaba el fallo)
-        // En vez de borrar 'gameObject' (que es solo el hijo), borramos al padre
+        // 3. Borramos el soldado pasado un tiempo
         if (transform.parent != null)
         {
             Destroy(transform.parent.gameObject, tiempoParaBorrar);
-        }
-        else
-        {
-            // Por si acaso algún día pones el script en el padre directamente
-            Destroy(gameObject, tiempoParaBorrar);
-        }
+        }    
     }
 }
