@@ -69,7 +69,8 @@ En esta fase el jugador obtiene tropas adicionales para reforzar sus territorios
 | Castilla y León | +6 |
 
 📹 **Video Tutorial - Fase de Refuerzo:**
-<video src="video/refuerzo.mp4" width="640" controls></video>
+
+https://github.com/user-attachments/assets/6967876e-0ce8-4613-9016-094c6fde238a
 
 ---
 
@@ -91,9 +92,7 @@ En esta fase puedes atacar provincias enemigas adyacentes para expandir tu terri
 - Solo puedes atacar provincias **vecinas** (adyacentes)
 - Las bajas se calculan restando tropas del perdedor
 
-📹 **Video Tutorial
-
- - Fase de Ataque:**
+📹 **Video Tutorial - Fase de Ataque:**
 
 https://github.com/user-attachments/assets/14bd967d-6415-4780-b5da-c619ac52f440
 
@@ -210,4 +209,5 @@ Estos modelos se encuentran en la carpeta `Assets/Prefabs/`.
 ---
 
 *¡Buena suerte conquistando España!* 🏰
+
 
