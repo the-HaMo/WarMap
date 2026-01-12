@@ -14,11 +14,9 @@ public class MenuSeleccionManager : MonoBehaviour
     private bool mapaListo = false;
     private bool jugadoresListos = false;
 
-    // seleccionar provincia
     public void SeleccionarEspana()
     {
-        mapaListo = true;
-        
+        mapaListo = true;        
         // Pintamos el botón de verde para que se vea marcado
         var colors = botonEspana.colors;
         colors.normalColor = colorSeleccionado;
@@ -26,7 +24,6 @@ public class MenuSeleccionManager : MonoBehaviour
         botonEspana.colors = colors;
     }
 
-    // --- 2. FUNCIÓN PARA EL BOTÓN 2 JUGADORES ---
     public void Seleccionar2Jugadores()
     {
         jugadoresListos = true;
@@ -38,21 +35,13 @@ public class MenuSeleccionManager : MonoBehaviour
         boton2Jug.colors = colors;
     }
 
-    // --- 3. FUNCIÓN PARA EL BOTÓN START ---
     public void BotonStart()
     {
-        // Si no ha marcado los dos, no le dejamos pasar
         if (mapaListo == false || jugadoresListos == false)
         {
             Debug.Log("¡Debes seleccionar España y 2 Jugadores primero!");
             return; 
         }
-
-        // Si todo está marcado, guardamos y arrancamos
-        PlayerPrefs.SetString("MapaSeleccionado", "Espana");
-        PlayerPrefs.SetInt("NumeroJugadores", 2);
-        PlayerPrefs.Save();
-
         SceneManager.LoadScene("spain");
     }
 
