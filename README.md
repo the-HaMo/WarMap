@@ -1,9 +1,6 @@
-﻿# WarMap 🗺️⚔️
+﻿# WarMap ⚔️
 
-> **Asignatura:** Fundamentos Computacionales de los Videojuegos  
-> **Motor:** Unity (Universal Render Pipeline)
-
----
+![WarMap](resource/warmap.png)
 
 ## 📖 Índice
 
@@ -15,6 +12,7 @@
    - [Fase de Defensa](#3-fase-de-defensa-️)
 4. [Lógica del Juego](#-lógica-del-juego)
 5. [Objetos Modelados](#-objetos-modelados)
+6. [Ampliaciones Futuras](#-ampliaciones-futuras)
 6. [Referencias](#-referencias)
 
 ---
@@ -23,7 +21,7 @@
 
 **WarMap** es un juego de estrategia por turnos inspirado en el clásico juego de mesa **RISK**. El objetivo del juego es conquistar todo el mapa eliminando al ejército enemigo mediante estrategia, gestión de tropas y combates tácticos.
 
-El juego está ambientado en el **mapa de España**, donde dos jugadores (Azul y Rojo) compiten por el control de las diferentes comunidades autónomas. Cada jugador debe gestionar sus recursos, planificar ataques y defender sus territorios para lograr la victoria total.
+El juego está ambientado en el **mapa de España**, donde dos jugadores (Azul y Rojo) compiten por el control de las diferentes comunidades autónomas. Cada jugador debe gestionar sus tropas, planificar ataques y defender sus territorios para lograr la victoria total.
 
 ### Características principales:
 - 🎲 Sistema de dados para determinar refuerzos
@@ -40,7 +38,7 @@ El juego está ambientado en el **mapa de España**, donde dos jugadores (Azul y
 2. Navegar a la carpeta descomprimida
 3. Ejecutar el archivo **`WarMap.exe`**
 
-> **Requisitos:** Windows 10/11, DirectX 12 compatible
+> **Requisitos:** Windows 10/11, Linux
 
 ---
 
@@ -129,11 +127,6 @@ Cada provincia tiene definida una lista de **provincias vecinas** (`List<Provinc
 - **Movimientos:** Solo puedes mover tropas a provincias vecinas que te pertenezcan
 - **Validación:** El sistema verifica con `vecinos.Contains(objetivo)` si una acción es válida
 
-```
-Ejemplo: Si Castilla-León tiene como vecinos a Galicia, Asturias, País Vasco, 
-La Rioja, Aragón, Cataluña, etc., solo podrás interactuar con esas provincias.
-```
-
 ### Cálculo de Combate
 
 El sistema de combate es determinista basado en la **superioridad numérica**:
@@ -169,14 +162,6 @@ Cuando ocurre un ataque entre provincias con dueño:
 3. El soldado perdedor **explota** en piezas con física de Rigidbody
 4. La cámara regresa a la vista principal
 
-### Control de Turnos y Bloqueos
-
-El sistema utiliza flags booleanos para evitar acciones durante animaciones:
-- `esperandoDado`: Bloquea acciones mientras se espera el lanzamiento del dado
-- `viendoBatalla`: Bloquea acciones durante la animación de combate
-
----
-
 ## 🎨 Objetos Modelados
 
 Los siguientes modelos 3D fueron creados específicamente para este proyecto:
@@ -185,27 +170,40 @@ Los siguientes modelos 3D fueron creados específicamente para este proyecto:
 |--------|---------|-------------|
 | 🎲 Dado Azul | `dadoAzul.fbx` | Dado 3D para el jugador azul |
 | 🎲 Dado Rojo | `dadoRojo.fbx` | Dado 3D para el jugador rojo |
-| 🧍 Soldado | `soldadoR.fbx` | Modelo de soldado para las animaciones de combate |
+| 🧍 Soldado | `soldadoR.fbx` | Modelado de las animaciones del soldado |
 | 🗺️ Mapa de España | `spain.fbx` | Mapa 3D de España dividido en provincias |
 
 Estos modelos se encuentran en la carpeta `Assets/Prefabs/`.
+
+## 🚀 Ampliaciones Futuras
+
+El desarrollo de WarMap no termina aquí. Estas son las mejoras y características planeadas para futuras versiones:
+
+### 🗺️ Nuevos Mapas
+- **Mapa de Europa:** Expandir el campo de batalla a todo el continente europeo con sus diferentes regiones y bonus específicos
+- **Mapa Mundial:** Un mapa global con todos los continentes, océanos y zonas estratégicas
+
+### 👥 Modo Multijugador
+- **3-4 jugadores simultáneos:** Partidas épicas con múltiples facciones compitiendo
+- **IA con diferentes niveles de dificultad:** Desde principiante hasta experto en el caso de jugar en solitario.
+
 
 ---
 
 ## 📚 Referencias
 
-- **Inspiración principal:** [RISK - Juego de mesa de estrategia](https://es.wikipedia.org/wiki/Risk)
+- **Inspiración principal:** [RISK](https://store.steampowered.com/app/1128810/RISK_Global_Domination/?l=latam)
 - **Motor de juego:** [Unity](https://unity.com/)
 - **Render Pipeline:** Universal Render Pipeline (URP)
-- **UI:** TextMesh Pro
-
+- **Modelado del soldado:** [soldado](https://sketchfab.com/3d-models/army-men-green-soldier-66351cbe5e6a4e3fb00fc7e6465346e0)
 ---
 
 ## 🎓 Información Académica
 
 - **Asignatura:** Fundamentos Computacionales de los Videojuegos
-- **Proyecto:** WarMap - Juego de estrategia por turnos
-
+- **Proyecto:** WarMap 
+- **Tutor:** Guil Asensio, Francisco de Asis
+- **Alumno:** Labied Nasser, Mohammed Amrou 
 ---
 
 *¡Buena suerte conquistando España!* 🏰
