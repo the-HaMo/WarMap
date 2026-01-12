@@ -195,6 +195,7 @@ El desarrollo de WarMap no termina aquí. Estas son las mejoras y característic
 - **Inspiración principal:** [RISK](https://store.steampowered.com/app/1128810/RISK_Global_Domination/?l=latam)
 - **Motor de juego:** [Unity](https://unity.com/)
 - **Render Pipeline:** Universal Render Pipeline (URP)
+- **Material de clase:** de las distintas semanas
 - **Modelado del soldado:** [soldado](https://sketchfab.com/3d-models/army-men-green-soldier-66351cbe5e6a4e3fb00fc7e6465346e0)
 ---
 
@@ -204,8 +205,9 @@ El desarrollo de WarMap no termina aquí. Estas son las mejoras y característic
 - **Proyecto:** WarMap 
 - **Tutor:** Guil Asensio, Francisco de Asis
 - **Alumno:** Labied Nasser, Mohammed Amrou 
+- **Correo:** ma.labiednasser@um.es 
 ---
 
-*¡Buena suerte conquistando España!* 🏰
+*¡Buena suerte conquistando España!* 
 
 
