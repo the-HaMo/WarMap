@@ -202,7 +202,7 @@ El desarrollo de WarMap no termina aquí. Estas son las mejoras y característic
 ## 🎓 Información Académica
 
 - **Asignatura:** Fundamentos Computacionales de los Videojuegos
-- **Proyecto:** WarMap 
+- **Proyecto:** WarMap (RISK)
 - **Tutor:** Guil Asensio, Francisco de Asis
 - **Alumno:** Labied Nasser, Mohammed Amrou 
 - **Correo:** ma.labiednasser@um.es 
